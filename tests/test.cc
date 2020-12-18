@@ -102,3 +102,17 @@ TEST_CASE( "constant", "[constant]" )
     std::cout << "NAN:\t" <<  float16_t{std::numeric_limits<float>::quiet_NaN()} << std::endl;
 }
 
+TEST_CASE( "neg", "[neg]" )
+{
+    auto one = numeric::fp16_one;
+    std::cout << "one:\t" << one << std::endl;
+    std::cout << "neg one:\t" << -one << std::endl;
+    for ( float x = -1.0f; x < 1.0f; x += 0.023 )
+    {
+        numeric::float16_t x_ = x;
+        std::cout << x_ << ":\t" << -x_ << std::endl;
+    }
+}
+
+
+

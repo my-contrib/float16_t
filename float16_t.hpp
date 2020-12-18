@@ -183,6 +183,12 @@ namespace numeric
         {
             return data_.bits_;
         }
+
+        float16_t operator - () const noexcept
+        {
+            return float16_t{ static_cast<std::uint16_t>((data_.bits_ & 0x7fff) | (data_.bits_ ^ 0x8000 )) };
+        }
+
     }; //struct float16_t
 
     constexpr float16_t         fp16_infinity{ static_cast<std::uint16_t>(0x7c00) };
@@ -199,8 +205,6 @@ namespace numeric
     constexpr float16_t         fp16_zero_negative{ static_cast<std::uint16_t>(0x8000) };
     constexpr float16_t         fp16_e{ static_cast<std::uint16_t>(0x4170) };
     constexpr float16_t         fp16_pi{ static_cast<std::uint16_t>(0x4248) };
-
-
 
     constexpr bool is_nan( float16_t f16 ) noexcept
     {
@@ -232,7 +236,6 @@ namespace numeric
     {
         return (std::uint16_t(f16)) & 0x8000;
     }
-
 
     inline std::ostream& operator << ( std::ostream& os, float16_t const& f )
     {
