@@ -360,19 +360,27 @@ namespace numeric
         return float(lhs) >= float(rhs);
     }
 
-    inline std::ostream& operator << ( std::ostream& os, float16_t const& f )
+    template<typename CharT, class Traits>
+    std::basic_ostream<CharT, Traits>& operator << ( std::basic_ostream<CharT, Traits>& os, float16_t const& f )
     {
-        os << float(f);
+        std::basic_ostringstream<CharT, Traits> __s;
+        __s.flags(os.flags());
+        __s.imbue(os.getloc());
+        __s.precision(os.precision());
+
+        __s << float(f);
         if constexpr( debug_mode )
         {
-            os << "(";
-            os  << std::bitset<1>( f.data_.ieee_.sign_ ) << " ";
-            os  << std::bitset<5>( f.data_.ieee_.exp_ ) << " ";
-            os  << std::bitset<10>( f.data_.ieee_.frac_ ) << ")";
+            __s << "(";
+            __s  << std::bitset<1>( f.data_.ieee_.sign_ ) << " ";
+            __s  << std::bitset<5>( f.data_.ieee_.exp_ ) << " ";
+            __s  << std::bitset<10>( f.data_.ieee_.frac_ ) << ")";
         }
-        return os;
+
+        return os << __s.str();
     }
-     // operator >> ?
+
+    // operator >> ?
 
     //TODO: all functions in <cmath>
 
