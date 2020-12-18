@@ -284,37 +284,6 @@ namespace numeric
     constexpr float16_t         fp16_e{ static_cast<std::uint16_t>(0x4170) };
     constexpr float16_t         fp16_pi{ static_cast<std::uint16_t>(0x4248) };
 
-    constexpr bool is_nan( float16_t f16 ) noexcept
-    {
-        return (std::uint16_t(f16) & 0x7fff) > 0x7f80;
-    }
-
-    constexpr bool is_inf( float16_t f16 ) noexcept
-    {
-        return (std::uint16_t(f16) & 0x7fff) == 0x7f80;
-    }
-
-    constexpr bool is_isfinite( float16_t f16 ) noexcept
-    {
-        return (std::uint16_t(f16) & 0x7f80) != 0x7f80;
-    }
-
-    constexpr bool is_normal( float16_t f16 ) noexcept
-    {
-        auto const exponent = std::uint16_t(f16) & 0x7f80;
-        return (exponent != 0x7f80) && (exponent != 0);
-    }
-
-    constexpr bool is_positive( float16_t f16 ) noexcept
-    {
-        return ((std::uint16_t(f16)) & 0x8000) == 0;
-    }
-
-    constexpr bool is_negative( float16_t f16 ) noexcept
-    {
-        return (std::uint16_t(f16)) & 0x8000;
-    }
-
     constexpr float16_t operator + ( float16_t lhs, float16_t rhs ) noexcept
     {
         return float(lhs) + float(rhs);
@@ -360,6 +329,11 @@ namespace numeric
         return float(lhs) >= float(rhs);
     }
 
+    constexpr bool operator != ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) != float(rhs);
+    }
+
     template<typename CharT, class Traits>
     std::basic_ostream<CharT, Traits>& operator << ( std::basic_ostream<CharT, Traits>& os, float16_t const& f )
     {
@@ -383,16 +357,16 @@ namespace numeric
     template<typename CharT, class Traits>
     std::basic_istream<CharT, Traits>& operator >> ( std::basic_istream<CharT, Traits>& is, float16_t& f )
     {
-        bool fail = true;
-        float v;
+        bool __fail = true;
+        float __v;
 
-        if ( is >> v )
+        if ( is >> __v )
         {
-            fail = false;
-            f = v;
+            __fail = false;
+            f = __v;
         }
 
-        if (fail)
+        if (__fail)
             is.setstate(std::ios_base::failbit);
 
         return is;
@@ -408,6 +382,136 @@ namespace numeric
         return ans;
     }
 
+    namespace float16_t_private
+    {
+        auto constexpr make_unary_function = []( auto const& func ) noexcept
+        {
+            return [func]( float16_t f ) -> float16_t { return func( float(f) ); };
+        };
+
+        auto constexpr make_binary_function = []( auto const& func ) noexcept
+        {
+            return [func]( float16_t f1, float16_t f2 ) -> float16_t { return func( float(f1), float(f2) ); };
+        };
+
+        auto constexpr make_trinary_function = []( auto const& func ) noexcept
+        {
+            return [func]( float16_t f1, float16_t f2, float16_t f3 ) -> float16_t { return func( float(f1), float(f2), float(f3) ); };
+        };
+
+    }//float_t_private
+
+    constexpr auto fmod = float16_t_private::make_binary_function( []( float f1, float f2 ) { return std::fmod( f1, f2 ); } );
+    constexpr auto remainder = float16_t_private::make_binary_function( []( float f1, float f2 ) { return std::remainder( f1, f2 ); } );
+    //remquo ??
+    constexpr auto fma = float16_t_private::make_trinary_function( []( float f1, float f2, float f3 ) { return std::fma( f1, f2, f3 ); } );
+    constexpr auto fmax = float16_t_private::make_binary_function( []( float f1, float f2 ) { return std::fmax( f1, f2 ); } );
+    constexpr auto fmin = float16_t_private::make_binary_function( []( float f1, float f2 ) { return std::fmax( f1, f2 ); } );
+    constexpr auto fdim = float16_t_private::make_binary_function( []( float f1, float f2 ) { return std::fdim( f1, f2 ); } );
+    constexpr auto lerp = float16_t_private::make_trinary_function( []( float f1, float f2, float f3 ) { return std::lerp( f1, f2, f3 ); } );
+    constexpr auto exp = float16_t_private::make_unary_function( [](float f){ return std::exp(f); } );
+    constexpr auto exp2 = float16_t_private::make_unary_function( [](float f){ return std::exp2(f); } );
+    constexpr auto expm1 = float16_t_private::make_unary_function( [](float f){ return std::expm1(f); } );
+    constexpr auto log = float16_t_private::make_unary_function( [](float f){ return std::log(f); } );
+    constexpr auto log10 = float16_t_private::make_unary_function( [](float f){ return std::log10(f); } );
+    constexpr auto log2 = float16_t_private::make_unary_function( [](float f){ return std::log2(f); } );
+    constexpr auto log1p = float16_t_private::make_unary_function( [](float f){ return std::log1p(f); } );
+    constexpr auto pow = float16_t_private::make_binary_function( []( float f1, float f2 ) { return std::pow( f1, f2 ); } );
+    constexpr auto sqrt = float16_t_private::make_unary_function( [](float f){ return std::sqrt(f); } );
+    constexpr auto cbrt = float16_t_private::make_unary_function( [](float f){ return std::cbrt(f); } );
+
+    inline float16_t hypot( float16_t f1, float16_t f2 )
+    {
+        return std::hypot( float(f1), float(f2) );
+    }
+
+    /* -- Should be valid after c++17 for 3 parameter hypot
+    inline float16_t hypot( float16_t f1, float16_t f2, float16_t )
+    {
+        return std::hypot( float(f1), float(f2), float(f3) );
+    }
+    */
+
+    constexpr auto sin = float16_t_private::make_unary_function( [](float f){ return std::sin(f); } );
+    constexpr auto sinh = float16_t_private::make_unary_function( [](float f){ return std::sinh(f); } );
+    constexpr auto cos = float16_t_private::make_unary_function( [](float f){ return std::cos(f); } );
+    constexpr auto cosh = float16_t_private::make_unary_function( [](float f){ return std::cosh(f); } );
+    constexpr auto tan = float16_t_private::make_unary_function( [](float f){ return std::tan(f); } );
+    constexpr auto tanh = float16_t_private::make_unary_function( [](float f){ return std::tanh(f); } );
+    constexpr auto asin = float16_t_private::make_unary_function( [](float f){ return std::asin(f); } );
+    constexpr auto asinh = float16_t_private::make_unary_function( [](float f){ return std::asinh(f); } );
+    constexpr auto acos = float16_t_private::make_unary_function( [](float f){ return std::acos(f); } );
+    constexpr auto acosh = float16_t_private::make_unary_function( [](float f){ return std::acosh(f); } );
+    constexpr auto atan = float16_t_private::make_unary_function( [](float f){ return std::atan(f); } );
+    constexpr auto atanh = float16_t_private::make_unary_function( [](float f){ return std::atanh(f); } );
+    constexpr auto atan2 = float16_t_private::make_binary_function( [](float f1, float f2){ return std::atan2(f1, f2); } );
+
+    constexpr auto erf = float16_t_private::make_unary_function( [](float f){ return std::erf(f); } );
+    constexpr auto erfc = float16_t_private::make_unary_function( [](float f){ return std::erfc(f); } );
+    constexpr auto tgamma = float16_t_private::make_unary_function( [](float f){ return std::tgamma(f); } );
+    constexpr auto lgamma = float16_t_private::make_unary_function( [](float f){ return std::lgamma(f); } );
+    constexpr auto ceil = float16_t_private::make_unary_function( [](float f){ return std::ceil(f); } );
+    constexpr auto floor = float16_t_private::make_unary_function( [](float f){ return std::floor(f); } );
+    constexpr auto trunc = float16_t_private::make_unary_function( [](float f){ return std::trunc(f); } );
+    constexpr auto round = float16_t_private::make_unary_function( [](float f){ return std::round(f); } );
+    constexpr auto nearbyint = float16_t_private::make_unary_function( [](float f){ return std::nearbyint(f); } );
+    constexpr auto rint = float16_t_private::make_unary_function( [](float f){ return std::rint(f); } );
+
+    //Floating point manipulation functions not defined
+    //frexp ldexp, modf, scalbn, ilogb
+
+    constexpr auto logb = float16_t_private::make_unary_function( [](float f){ return std::logb(f); } );
+    constexpr auto nextafter = float16_t_private::make_binary_function( [](float f1, float f2){ return std::nextafter(f1, f2); } );
+    constexpr auto copysign = float16_t_private::make_binary_function( [](float f1, float f2){ return std::copysign(f1, f2); } );
+
+    constexpr bool is_nan( float16_t f16 ) noexcept
+    {
+        return (std::uint16_t(f16) & 0x7fff) > 0x7f80;
+    }
+
+    constexpr bool is_inf( float16_t f16 ) noexcept
+    {
+        return (std::uint16_t(f16) & 0x7fff) == 0x7f80;
+    }
+
+    constexpr bool is_finite( float16_t f16 ) noexcept
+    {
+        return (std::uint16_t(f16) & 0x7f80) != 0x7f80;
+    }
+
+    constexpr bool is_normal( float16_t f16 ) noexcept
+    {
+        auto const exponent = std::uint16_t(f16) & 0x7f80;
+        return (exponent != 0x7f80) && (exponent != 0);
+    }
+
+    constexpr bool is_positive( float16_t f16 ) noexcept
+    {
+        return ((std::uint16_t(f16)) & 0x8000) == 0;
+    }
+
+    constexpr bool is_negative( float16_t f16 ) noexcept
+    {
+        return (std::uint16_t(f16)) & 0x8000;
+    }
+
+    //special functions not defined
+    // assoc_laguerre, asso_legendre, hermite, legendre, laguerre, sph_bessel, sph_legendre, sph_neumann
+    //
+
+    constexpr auto beta = float16_t_private::make_binary_function( [](float f1, float f2){ return std::beta(f1, f2); } );
+    constexpr auto comp_ellint_1 = float16_t_private::make_unary_function( [](float f){ return std::comp_ellint_1(f); } );
+    constexpr auto comp_ellint_2 = float16_t_private::make_unary_function( [](float f){ return std::comp_ellint_2(f); } );
+    constexpr auto comp_ellint_3 = float16_t_private::make_binary_function( [](float f1, float f2){ return std::comp_ellint_3(f1, f2); } );
+    constexpr auto cyl_bessel_i = float16_t_private::make_binary_function( [](float f1, float f2){ return std::cyl_bessel_i(f1, f2); } );
+    constexpr auto cyl_bessel_j = float16_t_private::make_binary_function( [](float f1, float f2){ return std::cyl_bessel_j(f1, f2); } );
+    constexpr auto cyl_bessel_k = float16_t_private::make_binary_function( [](float f1, float f2){ return std::cyl_bessel_k(f1, f2); } );
+    constexpr auto cyl_neumann = float16_t_private::make_binary_function( [](float f1, float f2){ return std::cyl_neumann(f1, f2); } );
+    constexpr auto ellint_1 = float16_t_private::make_binary_function( [](float f1, float f2){ return std::ellint_1(f1, f2); } );
+    constexpr auto ellint_2 = float16_t_private::make_binary_function( [](float f1, float f2){ return std::ellint_2(f1, f2); } );
+    constexpr auto ellint_3 = float16_t_private::make_trinary_function( [](float f1, float f2, float f3){ return std::ellint_3(f1, f2, f3); } );
+    constexpr auto expint = float16_t_private::make_unary_function( [](float f){ return std::expint(f); } );
+    constexpr auto riemann_zeta = float16_t_private::make_unary_function( [](float f){ return std::riemann_zeta(f); } );
 
 
 }//namespace numeric
