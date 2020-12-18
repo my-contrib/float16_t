@@ -1,3 +1,5 @@
+#ifndef FLOAT16_T_HPP_INCLUDED_OSDIJSALKJS8OU4LKJAFSOIUASFD98U3LJKASFOIJFFDDDDDF
+#define FLOAT16_T_HPP_INCLUDED_OSDIJSALKJS8OU4LKJAFSOIUASFD98U3LJKASFOIJFFDDDDDF
 //
 // License: BSD, Anti-996
 //
@@ -520,6 +522,7 @@ namespace numeric
     constexpr auto expint = float16_t_private::make_unary_function( [](float f){ return std::expint(f); } );
     constexpr auto riemann_zeta = float16_t_private::make_unary_function( [](float f){ return std::riemann_zeta(f); } );
 
-
 }//namespace numeric
+
+#endif
 
