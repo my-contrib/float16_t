@@ -189,6 +189,11 @@ namespace numeric
             return float16_t{ static_cast<std::uint16_t>((data_.bits_ & 0x7fff) | (data_.bits_ ^ 0x8000 )) };
         }
 
+        float16_t operator + () const noexcept
+        {
+            return *this;
+        }
+
     }; //struct float16_t
 
     constexpr float16_t         fp16_infinity{ static_cast<std::uint16_t>(0x7c00) };

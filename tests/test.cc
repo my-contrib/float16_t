@@ -114,5 +114,14 @@ TEST_CASE( "neg", "[neg]" )
     }
 }
 
+TEST_CASE( "pos", "[pos]" )
+{
+    for ( float x = -1.0f; x < 1.0f; x += 0.023 )
+    {
+        numeric::float16_t x_ = x;
+        std::cout << x_ << ":\t" << +x_ << std::endl;
+    }
+}
+
 
 
