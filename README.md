@@ -91,7 +91,53 @@ numeric::cbrt(h) = 0.646484(0 01110 0100101100)
 
 ```
 
-For more information, please check the source file `float16_t.hpp`.
+There are also some predefined constants:
+
+```cpp
+    using namespace numeric;
+    std::cout << "fp16_infinity:\t" << fp16_infinity << std::endl;
+    std::cout << "fp16_max:\t" << fp16_max << std::endl;
+    std::cout << "fp16_max_subnormal:\t" << fp16_max_subnormal << std::endl;
+    std::cout << "fp16_min:\t" << fp16_min << std::endl;
+    std::cout << "fp16_min_positive:\t" << fp16_min_positive << std::endl;
+    std::cout << "fp16_min_positive_subnormal:\t" << fp16_min_positive_subnormal << std::endl;
+    std::cout << "fp16_nan:\t" << fp16_nan << std::endl;
+    std::cout << "fp16_infinity_negative:\t" << fp16_infinity_negative << std::endl;
+
+    std::cout << "fp16_one:\t" << fp16_one << std::endl;
+    std::cout << "fp16_zero:\t" << fp16_zero << std::endl;
+    std::cout << "fp16_zero_negative:\t" << fp16_zero_negative << std::endl;
+    std::cout << "fp16_e:\t" << fp16_e << std::endl;
+    std::cout << "fp16_pi:\t" << fp16_pi << std::endl;
+
+```
+
+produces
+
+```
+fp16_infinity:  inf(0 11111 0000000000)
+fp16_max:       65504(0 11110 1111111111)
+fp16_max_subnormal:     0.000122011(0 00000 1111111111)
+fp16_min:       -65504(1 11110 1111111111)
+fp16_min_positive:      6.10352e-05(0 00001 0000000000)
+fp16_min_positive_subnormal:    6.10948e-05(0 00000 0000000001)
+fp16_nan:       nan(0 11111 1000000000)
+fp16_infinity_negative: -inf(1 11111 0000000000)
+fp16_one:       1(0 01111 0000000000)
+fp16_zero:      0(0 00000 0000000000)
+fp16_zero_negative:     -0(1 00000 0000000000)
+fp16_e: 2.71875(0 10000 0101110000)
+fp16_pi:        3.14062(0 10000 1001001000)
+E:      2.71875(0 10000 0101110000)
+PI:     3.14062(0 10000 1001001000)
+NAN:    nan(0 11111 1000000000)
+one:    1(0 01111 0000000000)
+neg one:        -1(1 01111 0000000000)
+```
+
+
+
+For more information, please check out the source file `float16_t.hpp`.
 
 
 ## Acknowledgements:
