@@ -1,17 +1,16 @@
 #include <cstdint>
-#include <algorithm>
 #include <limits>
 #include <iostream>
-#include <tuple>
 #include <cmath>
 #include <bitset>
 
 namespace numeric
 {
+    constexpr unsigned long const version = 1UL;
     #ifdef DEBUG
-    constexpr unsigned debug_mode = 1;
+    constexpr unsigned long const debug_mode = 1;
     #else
-    constexpr unsigned debug_mode = 0;
+    constexpr unsigned long const debug_mode = 0;
     #endif
 
     namespace float16_t_private
@@ -184,12 +183,86 @@ namespace numeric
             return data_.bits_;
         }
 
-        float16_t operator - () const noexcept
+        constexpr float16_t& operator += ( float16_t v ) const noexcept
+        {
+            *this = float(*this) + float(v);
+            return *this;
+        }
+
+        constexpr float16_t& operator -= ( float16_t v ) const noexcept
+        {
+            *this = float(*this) - float(v);
+            return *this;
+        }
+
+        constexpr float16_t& operator *= ( float16_t v ) const noexcept
+        {
+            *this = float(*this) * float(v);
+            return *this;
+        }
+
+        constexpr float16_t& operator /= ( float16_t v ) const noexcept
+        {
+            *this = float(*this) / float(v);
+            return *this;
+        }
+
+        constexpr float16_t& operator += ( float v ) const noexcept
+        {
+            *this = float(*this) + v;
+            return *this;
+        }
+
+        constexpr float16_t& operator -= ( float v ) const noexcept
+        {
+            *this = float(*this) - v;
+            return *this;
+        }
+
+        constexpr float16_t& operator *= ( float v ) const noexcept
+        {
+            *this = float(*this) * v;
+            return *this;
+        }
+
+        constexpr float16_t& operator /= ( float v ) const noexcept
+        {
+            *this = float(*this) / v;
+            return *this;
+        }
+
+        constexpr float16_t operator -- () noexcept //--f
+        {
+            *this -= 1.0f;
+            return *this;
+        }
+
+        constexpr float16_t operator -- (int) noexcept // f--
+        {
+            float16_t ans{*this};
+            *this -= 1.0f;
+            return ans;
+        }
+
+        constexpr float16_t operator ++ () noexcept //++f
+        {
+            *this += 1.0f;
+            return *this;
+        }
+
+        constexpr float16_t operator ++ (int) noexcept // f++
+        {
+            float16_t ans{*this};
+            *this += 1.0f;
+            return ans;
+        }
+
+        constexpr float16_t operator - () const noexcept
         {
             return float16_t{ static_cast<std::uint16_t>((data_.bits_ & 0x7fff) | (data_.bits_ ^ 0x8000 )) };
         }
 
-        float16_t operator + () const noexcept
+        constexpr float16_t operator + () const noexcept
         {
             return *this;
         }
@@ -242,6 +315,51 @@ namespace numeric
         return (std::uint16_t(f16)) & 0x8000;
     }
 
+    constexpr float16_t operaator + ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) + float(rhs);
+    }
+
+    constexpr float16_t operaator - ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) - float(rhs);
+    }
+
+    constexpr float16_t operaator * ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) * float(rhs);
+    }
+
+    constexpr float16_t operaator / ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) / float(rhs);
+    }
+
+    constexpr bool operator < ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) < float(rhs);
+    }
+
+    constexpr bool operator <= ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) <= float(rhs);
+    }
+
+    constexpr bool operator == ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) == float(rhs);
+    }
+
+    constexpr bool operator > ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) > float(rhs);
+    }
+
+    constexpr bool operator >= ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return float(lhs) >= float(rhs);
+    }
+
     inline std::ostream& operator << ( std::ostream& os, float16_t const& f )
     {
         os << float(f);
@@ -254,6 +372,17 @@ namespace numeric
         }
         return os;
     }
+     // operator >> ?
+
+    //TODO: all functions in <cmath>
+
+    constexpr float16_t abs( float16_t f ) noexcept
+    {
+        float16_t ans{f};
+        ans.bits_ &= 0x7fff;
+        return ans;
+    }
+
 
 
 }//namespace numeric
