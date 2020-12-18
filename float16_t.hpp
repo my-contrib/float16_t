@@ -380,7 +380,24 @@ namespace numeric
         return os << __s.str();
     }
 
-    // operator >> ?
+    template<typename CharT, class Traits>
+    std::basic_istream<CharT, Traits>& operator >> ( std::basic_istream<CharT, Traits>& is, float16_t& f )
+    {
+        bool fail = true;
+        float v;
+
+        if ( is >> v )
+        {
+            fail = false;
+            f = v;
+        }
+
+        if (fail)
+            is.setstate(std::ios_base::failbit);
+
+        return is;
+    }
+
 
     //TODO: all functions in <cmath>
 
