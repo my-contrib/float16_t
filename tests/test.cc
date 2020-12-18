@@ -8,10 +8,16 @@
 
 void print( float x )
 {
-    using float16_private::float32_to_float16;
-    auto [sign, exponent, fraction] = float32_to_float16( x );
-    std::cout.precision( 15 );
-    std::cout << x << ":\t" << std::bitset<1>(sign) << " " << std::bitset<5>(exponent) << " " << std::bitset<10>(fraction) << std::endl;
+    using float16_t_private::float32_to_float16;
+    using float16_t_private::float16_to_float32;
+
+    auto f16 = float32_to_float16( x );
+    std::cout << x << " => " << f16 << std::endl;
+
+    auto f32 = float16_to_float32( f16.bits_ );
+    std::cout << "f32 => " << f32 << std::endl;
+
+    std::cout << "****************************" << std::endl;
 }
 
 TEST_CASE( "32_2_16", "[32_2_16]" )
@@ -41,7 +47,8 @@ TEST_CASE( "32_2_16", "[32_2_16]" )
     print(  1.00097656f  );
     print(  -1.00097656f  );
 
-    print(  -1.0f/0.0f  );
+    print( std::numeric_limits<float>::infinity() );
+    print( std::numeric_limits<float>::quiet_NaN() );
 
     print( 16504.0f  );
     print( -16204.0f  );
