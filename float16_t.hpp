@@ -1,5 +1,5 @@
 //
-// License: BSD
+// License: BSD, Anti-996
 //
 // inspired by:
 // https://github.com/acgessler/half_float

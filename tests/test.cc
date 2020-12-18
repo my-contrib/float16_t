@@ -123,5 +123,41 @@ TEST_CASE( "pos", "[pos]" )
     }
 }
 
+TEST_CASE( "example", "[example]" )
+{
+    using numeric::float16_t;
+
+    float16_t f = 1.1f;
+    {
+        std::cout << "f =" << f << std::endl;
+        std::cout << "float(f) =" << float(f) << std::endl;
+        std::cout << "f++ =" << f++ << std::endl;
+        std::cout << "++f =" << ++f << std::endl;
+        std::cout << "f-- =" << f-- << std::endl;
+        std::cout << "--f =" << --f << std::endl;
+    }
+    std::cout << "********" << std::endl;
+
+
+    float16_t g = -1.3f;
+    {
+        std::cout << "f+g = " << f+g << std::endl;
+        std::cout << "f-g = " << f-g << std::endl;
+        std::cout << "f*g = " << f*g << std::endl;
+        std::cout << "f/g = " << f/g << std::endl;
+    }
+    std::cout << "********" << std::endl;
+
+    float16_t h = 0.27f;
+    {
+        std::cout << "numeric::sin(h) = " << numeric::sin(h) << std::endl;
+        std::cout << "numeric::cos(h) = " << numeric::cos(h) << std::endl;
+        std::cout << "numeric::sqrt(h) = " << numeric::sqrt(h) << std::endl;
+        std::cout << "numeric::cbrt(h) = " << numeric::cbrt(h) << std::endl;
+    }
+    std::cout << "********" << std::endl;
+
+}
+
 
 
