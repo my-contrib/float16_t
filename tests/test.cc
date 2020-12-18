@@ -4,6 +4,7 @@
 #include <cmath>
 #include <iostream>
 #include <bitset>
+#include <limits>
 
 void print( float x )
 {
@@ -75,3 +76,29 @@ TEST_CASE( "f1", "[f1]" )
         REQUIRE( std::abs(x- x_) < 0.01f );
     }
 }
+
+TEST_CASE( "constant", "[constant]" )
+{
+    using namespace numeric;
+
+    //std::cout << "fp16_epsilon:\t" << fp16_epsilon << std::endl;
+    std::cout << "fp16_infinity:\t" << fp16_infinity << std::endl;
+    std::cout << "fp16_max:\t" << fp16_max << std::endl;
+    std::cout << "fp16_max_subnormal:\t" << fp16_max_subnormal << std::endl;
+    std::cout << "fp16_min:\t" << fp16_min << std::endl;
+    std::cout << "fp16_min_positive:\t" << fp16_min_positive << std::endl;
+    std::cout << "fp16_min_positive_subnormal:\t" << fp16_min_positive_subnormal << std::endl;
+    std::cout << "fp16_nan:\t" << fp16_nan << std::endl;
+    std::cout << "fp16_infinity_negative:\t" << fp16_infinity_negative << std::endl;
+
+    std::cout << "fp16_one:\t" << fp16_one << std::endl;
+    std::cout << "fp16_zero:\t" << fp16_zero << std::endl;
+    std::cout << "fp16_zero_negative:\t" << fp16_zero_negative << std::endl;
+    std::cout << "fp16_e:\t" << fp16_e << std::endl;
+    std::cout << "fp16_pi:\t" << fp16_pi << std::endl;
+
+    std::cout << "E:\t" <<  float16_t{2.71828182845904523536f} << std::endl;
+    std::cout << "PI:\t" <<  float16_t{3.141592653589f} << std::endl;
+    std::cout << "NAN:\t" <<  float16_t{std::numeric_limits<float>::quiet_NaN()} << std::endl;
+}
+

@@ -185,6 +185,23 @@ namespace numeric
         }
     }; //struct float16_t
 
+    constexpr float16_t         fp16_infinity{ static_cast<std::uint16_t>(0x7c00) };
+    constexpr float16_t         fp16_max{ static_cast<std::uint16_t>(0x7bff) }; //65504
+    constexpr float16_t         fp16_max_subnormal{ static_cast<std::uint16_t>(0x3ff) }; // 0.00006097
+    constexpr float16_t         fp16_min{ static_cast<std::uint16_t>(0xfbff) };
+    constexpr float16_t         fp16_min_positive{ static_cast<std::uint16_t>(0x400) };
+    constexpr float16_t         fp16_min_positive_subnormal{ static_cast<std::uint16_t>(0x1) };
+    constexpr float16_t         fp16_nan{ static_cast<std::uint16_t>(0x7e00) };
+    constexpr float16_t         fp16_infinity_negative{ static_cast<std::uint16_t>(0xfc00) };
+
+    constexpr float16_t         fp16_one{ static_cast<std::uint16_t>(0x3c00) };
+    constexpr float16_t         fp16_zero{ static_cast<std::uint16_t>(0x0) };
+    constexpr float16_t         fp16_zero_negative{ static_cast<std::uint16_t>(0x8000) };
+    constexpr float16_t         fp16_e{ static_cast<std::uint16_t>(0x4170) };
+    constexpr float16_t         fp16_pi{ static_cast<std::uint16_t>(0x4248) };
+
+
+
     constexpr bool is_nan( float16_t f16 ) noexcept
     {
         return (std::uint16_t(f16) & 0x7fff) > 0x7f80;
@@ -204,6 +221,16 @@ namespace numeric
     {
         auto const exponent = std::uint16_t(f16) & 0x7f80;
         return (exponent != 0x7f80) && (exponent != 0);
+    }
+
+    constexpr bool is_positive( float16_t f16 ) noexcept
+    {
+        return ((std::uint16_t(f16)) & 0x8000) == 0;
+    }
+
+    constexpr bool is_negative( float16_t f16 ) noexcept
+    {
+        return (std::uint16_t(f16)) & 0x8000;
     }
 
 
