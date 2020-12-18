@@ -1,3 +1,10 @@
+//
+// License: BSD
+//
+// inspired by:
+// https://github.com/acgessler/half_float
+// https://github.com/x448/float16
+//
 #include <cstdint>
 #include <limits>
 #include <iostream>
