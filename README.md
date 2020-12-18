@@ -109,7 +109,7 @@ There are also some predefined constants:
     std::cout << "fp16_zero_negative:\t" << fp16_zero_negative << std::endl;
     std::cout << "fp16_e:\t" << fp16_e << std::endl;
     std::cout << "fp16_pi:\t" << fp16_pi << std::endl;
-
+    std::cout << "NAN:\t" <<  float16_t{std::numeric_limits<float>::quiet_NaN()} << std::endl;
 ```
 
 produces
@@ -131,8 +131,6 @@ fp16_pi:        3.14062(0 10000 1001001000)
 E:      2.71875(0 10000 0101110000)
 PI:     3.14062(0 10000 1001001000)
 NAN:    nan(0 11111 1000000000)
-one:    1(0 01111 0000000000)
-neg one:        -1(1 01111 0000000000)
 ```
 
 
