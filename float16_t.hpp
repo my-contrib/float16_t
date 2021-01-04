@@ -15,7 +15,7 @@
 
 namespace half
 {
-
+    // credit goes to David Lin <https://gist.github.com/davll/9679518>
     #ifdef __GNUC__
     constexpr inline int using_gnu_c = 1;
     #else
@@ -472,10 +472,9 @@ namespace half
 }//namespace half
 
 
-
 namespace numeric
 {
-    constexpr inline unsigned long const version = 1UL;
+    constexpr inline unsigned long const version = 20210104UL;
     #ifdef DEBUG
     constexpr inline unsigned long const debug_mode = 1;
     #else
@@ -538,57 +537,6 @@ namespace numeric
             float16 f16;
             f16.bits_ = half::float_to_half( f32.bits_ );
             return f16;
-
-            #if 0
-            using float16_t_private::to_float16;
-            float32 f32;
-            f32.float_ = input;
-            std::uint32_t const u32 = f32.bits_;
-            std::uint32_t sign = u32 & 0x80000000;
-            std::uint32_t exponent = u32 & 0x7f800000;
-            std::uint32_t coef = u32 & 0x7fffff;
-
-            if ( exponent == 0x7f800000 )
-            {
-                std::uint32_t nan_bit = 0;
-
-                if ( coef != 0 )
-                    nan_bit = 0x200;
-
-                return to_float16( ( sign >> 16 ) | 0x7c00 | nan_bit | ( coef >> 13 ) );
-            }
-
-            std::uint32_t half_sign = sign >> 16;
-            std::int32_t unbiased_exponent = static_cast<std::uint32_t>( exponent >> 23 ) - 127;
-            std::int32_t half_exponent = unbiased_exponent + 15;
-
-            if ( half_exponent == 0x1f )
-                return to_float16( half_sign | 0x7c00 );
-
-            if ( half_exponent <= 0 )
-            {
-                if ( half_exponent < -10 )
-                    return to_float16( half_sign  );
-
-                std::uint32_t c = coef | 0x800000;
-                std::uint32_t half_coef = c >> ( 14 - half_exponent );
-                std::uint32_t round_bit = 1 << ( 13 - half_exponent );
-
-                if ( ( c & round_bit ) && ( c & ( 3 * round_bit - 1 ) ) )
-                    ++half_coef;
-
-                return to_float16( half_sign | half_coef );
-            }
-
-            std::uint32_t uhalf_exponent = half_exponent << 10;
-            std::uint32_t half_coef = coef >> 13;
-            std::uint32_t round_bit = 0x1000;
-
-            if ( ( coef & round_bit ) && ( coef & ( 3 * round_bit - 1 ) ) )
-                return to_float16( ( half_sign | uhalf_exponent | half_coef ) + 1 );
-
-            return to_float16( ( half_sign | uhalf_exponent | half_coef ) );
-            #endif
         }
 
         inline constexpr float32 float16_to_float32( std::uint16_t input ) noexcept
@@ -596,38 +544,6 @@ namespace numeric
             float32 f32;
             f32.bits_ = half::half_to_float( input );
             return f32;
-
-            #if 0
-            std::uint32_t sign = ( input & 0x8000 ) << 16;
-            std::uint32_t exponent =  ( input & 0x7c00 ) >> 10;
-            std::uint32_t coef = ( input & 0x3ff ) << 13;
-
-            if ( exponent == 0x1f )
-            {
-                if ( coef == 0 )
-                    return float32{ sign | 0x7f800000 | coef };
-
-                return float32{ sign | 0x7fc00000 | coef };
-            }
-
-            if ( exponent == 0 )
-            {
-                if ( coef == 0 )
-                    return float32{ sign };
-
-                ++exponent;
-
-                while( coef & 0x7f800000 )
-                {
-                    coef <<= 1;
-                    --exponent;
-                }
-
-                coef &= 0x7fffff;
-            }
-
-            return float32{ sign | ( exponent + 0x70 ) << 23 | coef };
-            #endif
         }
 
     }//namespace float16_private
@@ -669,21 +585,18 @@ namespace numeric
         constexpr inline float16_t& operator += ( float16_t v ) noexcept
         {
             data_.bits_ = half::half_add( data_.bits_, v.data_.bits_ );
-            //*this = float(*this) + float(v);
             return *this;
         }
 
         constexpr inline float16_t& operator -= ( float16_t v ) noexcept
         {
             data_.bits_ = half::half_sub( data_.bits_, v.data_.bits_ );
-            //*this = float(*this) - float(v);
             return *this;
         }
 
         constexpr inline float16_t& operator *= ( float16_t v ) noexcept
         {
             data_.bits_ = half::half_mul( data_.bits_, v.data_.bits_ );
-            //*this = float(*this) * float(v);
             return *this;
         }
 
@@ -697,7 +610,6 @@ namespace numeric
         {
             auto f16 =  float16_t_private::float32_to_float16( v );
             data_.bits_ = half::half_add( data_.bits_, f16.bits_ );
-            //*this = float(*this) + v;
             return *this;
         }
 
@@ -705,13 +617,11 @@ namespace numeric
         {
             auto f16 =  float16_t_private::float32_to_float16( v );
             data_.bits_ = half::half_sub( data_.bits_, f16.bits_ );
-            //*this = float(*this) - v;
             return *this;
         }
 
         constexpr inline float16_t& operator *= ( float v ) noexcept
         {
-            //*this = float(*this) * v;
             auto f16 =  float16_t_private::float32_to_float16( v );
             data_.bits_ = half::half_mul( data_.bits_, f16.bits_ );
             return *this;

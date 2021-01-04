@@ -142,6 +142,7 @@ For more information, please check out the source file `float16_t.hpp`.
 
 + [half float](https://github.com/acgessler/half_float)
 + [float16](https://github.com/x448/float16)
++ [David Lin](https://gist.github.com/davll/9679518)
 
 ## License
 
