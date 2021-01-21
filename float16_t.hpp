@@ -10,6 +10,7 @@
 #include <iostream>
 #include <cmath>
 #include <bitset>
+#include <type_traits>
 
 namespace half
 {
@@ -471,7 +472,7 @@ namespace half
 
 namespace numeric
 {
-    constexpr inline unsigned long const version = 20210104UL;
+    constexpr inline unsigned long const version = 20210121UL;
     #ifdef DEBUG
     constexpr inline unsigned long const float16_debug_mode = 1;
     #else
@@ -676,8 +677,14 @@ namespace numeric
     constexpr inline float16_t         fp16_min_positive_subnormal{ static_cast<std::uint16_t>(0x1) };
     constexpr inline float16_t         fp16_nan{ static_cast<std::uint16_t>(0x7e00) };
     constexpr inline float16_t         fp16_infinity_negative{ static_cast<std::uint16_t>(0xfc00) };
+    constexpr inline float16_t         fp16_epsilon{ static_cast<std::uint16_t>(0x1400) };
 
     constexpr inline float16_t         fp16_one{ static_cast<std::uint16_t>(0x3c00) };
+    constexpr inline float16_t         fp16_one_negative{ static_cast<std::uint16_t>(0x4000) };
+    constexpr inline float16_t         fp16_two{ static_cast<std::uint16_t>(0x4000) };
+    constexpr inline float16_t         fp16_two_negative{ static_cast<std::uint16_t>(0xc000) };
+    constexpr inline float16_t         fp16_half{ static_cast<std::uint16_t>(0x3800) };
+    constexpr inline float16_t         fp16_half_negative{ static_cast<std::uint16_t>(0x3b00) };
     constexpr inline float16_t         fp16_zero{ static_cast<std::uint16_t>(0x0) };
     constexpr inline float16_t         fp16_zero_negative{ static_cast<std::uint16_t>(0x8000) };
     constexpr inline float16_t         fp16_e{ static_cast<std::uint16_t>(0x4170) };
@@ -741,9 +748,10 @@ namespace numeric
         __s.imbue(os.getloc());
         __s.precision(os.precision());
 
-        __s << float(f);
+        __s << std::scientific << float(f);
         if constexpr( float16_debug_mode )
         {
+            __s << "[0x" << std::hex << f.data_.bits_ << "]";
             __s << "(";
             __s  << std::bitset<1>( f.data_.ieee_.sign_ ) << " ";
             __s  << std::bitset<5>( f.data_.ieee_.exp_ ) << " ";
@@ -913,6 +921,55 @@ namespace numeric
     constexpr inline auto riemann_zeta = float16_t_private::make_unary_function( [](float f){ return std::riemann_zeta(f); } );
 
 }//namespace numeric
+
+
+#if 1
+namespace std
+{
+
+    template<> struct numeric_limits<numeric::float16_t>
+    {
+        static constexpr bool is_specialized = true;
+        static constexpr numeric::float16_t min() noexcept { return numeric::fp16_min_positive; }
+        static constexpr numeric::float16_t max() noexcept { return numeric::fp16_max; }
+        static constexpr numeric::float16_t lowest() noexcept { return numeric::fp16_min; }
+        static constexpr int digits = 11;
+        static constexpr int digits10 = 3;
+        static constexpr int max_digits10 = 4;
+        static constexpr bool is_signed = true;
+        static constexpr bool is_integer = false;
+        static constexpr bool is_exact = false;
+        static constexpr int radix = std::numeric_limits<float>::radix;
+        static constexpr numeric::float16_t epsilon() noexcept { return numeric::fp16_epsilon; }
+        static constexpr numeric::float16_t round_error() noexcept { return numeric::fp16_half; }
+        static constexpr int min_exponent = -13;
+        static constexpr int min_exponent10 = -4;
+        static constexpr int max_exponent = 14;
+        static constexpr int max_exponent10 = 4;
+        static constexpr bool has_infinity = true;
+        static constexpr bool has_quiet_NaN = true;
+        static constexpr bool has_signaling_NaN = has_quiet_NaN;
+        static constexpr std::float_denorm_style has_denorm = denorm_present;
+        static constexpr bool has_denorm_loss = false;
+        static constexpr numeric::float16_t infinity() noexcept { return numeric::fp16_infinity; }
+        static constexpr numeric::float16_t quiet_NaN() noexcept { return numeric::fp16_nan; }
+        static constexpr numeric::float16_t signaling_NaN() noexcept { return numeric::fp16_nan; }//TODO: emit signal??
+        static constexpr numeric::float16_t denorm_min() noexcept { return numeric::fp16_min_positive_subnormal; }
+        static constexpr bool is_iec559 = has_infinity && has_quiet_NaN && has_denorm == denorm_present;
+        static constexpr bool is_bounded = true;
+        static constexpr bool is_modulo = false;
+        static constexpr bool traps = false;
+        static constexpr bool tinyness_before = true;
+        static constexpr std::float_round_style round_style = round_to_nearest;
+    };
+
+    template<> inline constexpr bool is_floating_point_v<numeric::float16_t> = true;
+    template<> inline constexpr bool is_arithmetic_v<numeric::float16_t> = true;
+    template<> inline constexpr bool is_signed_v<numeric::float16_t> = true;
+
+}
+
+#endif
 
 #endif
 

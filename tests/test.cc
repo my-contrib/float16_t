@@ -159,5 +159,55 @@ TEST_CASE( "example", "[example]" )
 
 }
 
+TEST_CASE( "constant2", "[constant2]" )
+{
+    using numeric::float16_t;
+    {
+        float16_t h = 0.5f;
+        std::cout << "f16(0.5) = " << h << std::endl;
+        h = -0.5f;
+        std::cout << "f16(-0.5) = " << h << std::endl;
+        h = -1.0f;
+        std::cout << "f16(-1) = " << h << std::endl;
+        h = 1.0f;
+        std::cout << "f16(1) = " << h << std::endl;
+        h = 2.0f;
+        std::cout << "f16(2) = " << h << std::endl;
+        h = -2.0f;
+        std::cout << "f16(-2) = " << h << std::endl;
+    }
+    {
+        float16_t h = 1.0f;
+        std::uint16_t v = h;
+        std::cout << h << " - " << v << std::endl;
+        std::cout << float16_t(static_cast<std::uint16_t>(v+1)) << " - " << v+1 << std::endl;
+        float16_t h1 =  float16_t(static_cast<std::uint16_t>(v+1));
+        float diff = float(h1) - float(h);
+        std::cout << "EPS: " << diff << " - " << float16_t{diff} << std::endl;
+    }
+    std::cout << "\n";
+    {
+        float16_t h = numeric::fp16_min_positive;
+        float f = h;
+        std::cout << "fp16_min: " << std::scientific << f << std::endl;
+        std::cout << "fp16_min at hexfloat: " << std::hexfloat << f << std::endl;
+    }
+    std::cout << "\n";
+    {
+        float16_t h = numeric::fp16_max;
+        float f = h;
+        std::cout << "fp16_max: " << std::scientific << f << std::endl;
+        std::cout << "fp16_max at hexfloat: " << std::hexfloat << f << std::endl;
+    }
+
+    std::cout << "\n";
+    {
+        std::cout
+        << std::numeric_limits<float16_t>::lowest() << '\t'
+        << std::numeric_limits<float16_t>::min() << '\t'
+        << std::numeric_limits<float16_t>::max() << '\n';
+    }
+}
+
 
 

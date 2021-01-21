@@ -112,26 +112,41 @@ There are also some predefined constants:
     std::cout << "NAN:\t" <<  float16_t{std::numeric_limits<float>::quiet_NaN()} << std::endl;
 ```
 
-produces
+produces (debug mode):
 
 ```
-fp16_infinity:  inf(0 11111 0000000000)
-fp16_max:       65504(0 11110 1111111111)
-fp16_max_subnormal:     0.000122011(0 00000 1111111111)
-fp16_min:       -65504(1 11110 1111111111)
-fp16_min_positive:      6.10352e-05(0 00001 0000000000)
-fp16_min_positive_subnormal:    6.10948e-05(0 00000 0000000001)
-fp16_nan:       nan(0 11111 1000000000)
-fp16_infinity_negative: -inf(1 11111 0000000000)
-fp16_one:       1(0 01111 0000000000)
-fp16_zero:      0(0 00000 0000000000)
-fp16_zero_negative:     -0(1 00000 0000000000)
-fp16_e: 2.71875(0 10000 0101110000)
-fp16_pi:        3.14062(0 10000 1001001000)
-E:      2.71875(0 10000 0101110000)
-PI:     3.14062(0 10000 1001001000)
-NAN:    nan(0 11111 1000000000)
+fp16_infinity:  inf[0x7c00](0 11111 0000000000)
+fp16_max:       6.550400e+04[0x7bff](0 11110 1111111111)
+fp16_max_subnormal:     6.097555e-05[0x3ff](0 00000 1111111111)
+fp16_min:       -6.550400e+04[0xfbff](1 11110 1111111111)
+fp16_min_positive:      6.103516e-05[0x400](0 00001 0000000000)
+fp16_min_positive_subnormal:    5.960464e-08[0x1](0 00000 0000000001)
+fp16_nan:       nan[0x7e00](0 11111 1000000000)
+fp16_infinity_negative: -inf[0xfc00](1 11111 0000000000)
+fp16_one:       1.000000e+00[0x3c00](0 01111 0000000000)
+fp16_zero:      0.000000e+00[0x0](0 00000 0000000000)
+fp16_zero_negative:     -0.000000e+00[0x8000](1 00000 0000000000)
+fp16_e: 2.718750e+00[0x4170](0 10000 0101110000)
+fp16_pi:        3.140625e+00[0x4248](0 10000 1001001000)
+E:      2.718750e+00[0x4170](0 10000 0101110000)
+PI:     3.140625e+00[0x4248](0 10000 1001001000)
+NAN:    nan[0x7e00](0 11111 1000000000)
+one:    1.000000e+00[0x3c00](0 01111 0000000000)
+neg one:        -1.000000e+00[0xbc00](1 01111 0000000000)
 ```
+
+
+Also `numeric::float16_t` supports [`std::numeric_limits`](https://en.cppreference.com/w/cpp/types/numeric_limits). For example:
+
+```cpp
+using numeric::float16_t;
+std::cout
+<< std::numeric_limits<float16_t>::lowest() << '\t'
+<< std::numeric_limits<float16_t>::min() << '\t'
+<< std::numeric_limits<float16_t>::max() << '\n';
+```
+
+produces `-6.550400e+04 6.103516e-05 6.550400e+04`
 
 
 
@@ -146,5 +161,5 @@ For more information, please check out the source file `float16_t.hpp`.
 
 ## License
 
-BSD License, Anti-996 License.
+BSD License
 
