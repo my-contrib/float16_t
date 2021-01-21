@@ -633,27 +633,27 @@ namespace numeric
 
         constexpr inline float16_t operator -- () noexcept //--f
         {
-            *this -= 1.0f;
+            *this -= float16_t{static_cast<std::uint16_t>(0x3c00)};
             return *this;
         }
 
         constexpr inline float16_t operator -- (int) noexcept // f--
         {
             float16_t ans{*this};
-            *this -= 1.0f;
+            *this -= float16_t{static_cast<std::uint16_t>(0x3c00)};
             return ans;
         }
 
         constexpr inline float16_t operator ++ () noexcept //++f
         {
-            *this += 1.0f;
+            *this += float16_t{static_cast<std::uint16_t>(0x3c00)};
             return *this;
         }
 
         constexpr inline float16_t operator ++ (int) noexcept // f++
         {
             float16_t ans{*this};
-            *this += 1.0f;
+            *this += float16_t{static_cast<std::uint16_t>(0x3c00)};
             return ans;
         }
 
@@ -692,17 +692,23 @@ namespace numeric
 
     constexpr inline float16_t operator + ( float16_t lhs, float16_t rhs ) noexcept
     {
-        return float(lhs) + float(rhs);
+        float16_t ans{ lhs };
+        ans += rhs;
+        return ans;
     }
 
     constexpr inline float16_t operator - ( float16_t lhs, float16_t rhs ) noexcept
     {
-        return float(lhs) - float(rhs);
+        float16_t ans{ lhs };
+        ans -= rhs;
+        return ans;
     }
 
     constexpr inline float16_t operator * ( float16_t lhs, float16_t rhs ) noexcept
     {
-        return float(lhs) * float(rhs);
+        float16_t ans{ lhs };
+        ans *= rhs;
+        return ans;
     }
 
     constexpr inline float16_t operator / ( float16_t lhs, float16_t rhs ) noexcept
