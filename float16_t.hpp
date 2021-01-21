@@ -718,32 +718,48 @@ namespace numeric
 
     constexpr inline bool operator < ( float16_t lhs, float16_t rhs ) noexcept
     {
-        return float(lhs) < float(rhs);
-    }
+        auto const& l_ieee = lhs.data_.ieee_;
+        auto const& r_ieee = rhs.data_.ieee_;
 
-    constexpr inline bool operator <= ( float16_t lhs, float16_t rhs ) noexcept
-    {
-        return float(lhs) <= float(rhs);
+        if ( l_ieee.sign_ == 1 )
+        {
+            if ( r_ieee.sign_ == 0 ) return true;
+            if ( l_ieee.exp_ > r_ieee.exp_ ) return true;
+            if ( l_ieee.exp_ < r_ieee.exp_ ) return false;
+            if ( l_ieee.frac_ > r_ieee.frac_ ) return true;
+            return false;
+        }
+
+        if ( r_ieee.sign_ == 1 ) return false;
+        if ( l_ieee.exp_ > r_ieee.exp_ ) return false;
+        if ( l_ieee.exp_ < r_ieee.exp_ ) return true;
+        if ( l_ieee.frac_ >= r_ieee.frac_ ) return false;
+        return true;
     }
 
     constexpr inline bool operator == ( float16_t lhs, float16_t rhs ) noexcept
     {
-        return float(lhs) == float(rhs);
+        return lhs.data_.bits_ == rhs.data_.bits_;
+    }
+
+    constexpr inline bool operator <= ( float16_t lhs, float16_t rhs ) noexcept
+    {
+        return (lhs < rhs) || (lhs == rhs);
     }
 
     constexpr inline bool operator > ( float16_t lhs, float16_t rhs ) noexcept
     {
-        return float(lhs) > float(rhs);
+        return !( lhs <= rhs );
     }
 
     constexpr inline bool operator >= ( float16_t lhs, float16_t rhs ) noexcept
     {
-        return float(lhs) >= float(rhs);
+        return !( lhs < rhs );
     }
 
     constexpr inline bool operator != ( float16_t lhs, float16_t rhs ) noexcept
     {
-        return float(lhs) != float(rhs);
+        return !( lhs == rhs );
     }
 
     template<typename CharT, class Traits>
@@ -779,15 +795,13 @@ namespace numeric
             f = __v;
         }
 
-        if (__fail)
-            is.setstate(std::ios_base::failbit);
+        if (__fail) is.setstate(std::ios_base::failbit);
 
         return is;
     }
 
 
     //TODO: all functions in <cmath>
-
     constexpr inline float16_t abs( float16_t f ) noexcept
     {
         float16_t ans{f};
