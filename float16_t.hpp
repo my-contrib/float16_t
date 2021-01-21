@@ -1,8 +1,6 @@
 #ifndef FLOAT16_T_HPP_INCLUDED_OSDIJSALKJS8OU4LKJAFSOIUASFD98U3LJKASFOIJFFDDDDDF
 #define FLOAT16_T_HPP_INCLUDED_OSDIJSALKJS8OU4LKJAFSOIUASFD98U3LJKASFOIJFFDDDDDF
 //
-// License: BSD, Anti-996
-//
 // inspired by:
 // https://github.com/acgessler/half_float
 // https://github.com/x448/float16
@@ -59,7 +57,6 @@ namespace half
                 std::uint32_t result = _uint32_sels( is_x_nez_msb, nlz, 0x00000020 );
                 return ( result );
             }
-
             else
             {
                 const std::uint32_t x0 = ( x >> 1 );
@@ -476,9 +473,9 @@ namespace numeric
 {
     constexpr inline unsigned long const version = 20210104UL;
     #ifdef DEBUG
-    constexpr inline unsigned long const debug_mode = 1;
+    constexpr inline unsigned long const float16_debug_mode = 1;
     #else
-    constexpr inline unsigned long const debug_mode = 0;
+    constexpr inline unsigned long const float16_debug_mode = 0;
     #endif
 
     namespace float16_t_private
@@ -745,7 +742,7 @@ namespace numeric
         __s.precision(os.precision());
 
         __s << float(f);
-        if constexpr( debug_mode )
+        if constexpr( float16_debug_mode )
         {
             __s << "(";
             __s  << std::bitset<1>( f.data_.ieee_.sign_ ) << " ";
