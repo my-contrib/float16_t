@@ -18,7 +18,7 @@ namespace half
     #ifdef __GNUC__
     constexpr inline int using_gnu_c = 1;
     #else
-    constexpr inline int using_gnu_c = 1;
+    constexpr inline int using_gnu_c = 0;
     #endif
 
     namespace half_private
