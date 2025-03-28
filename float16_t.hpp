@@ -561,7 +561,7 @@ constexpr inline std::uint16_t half_sub(std::uint16_t ha,
 
 namespace numeric {
 constexpr inline unsigned long const version = 20210121UL;
-#ifdef DEBUG
+#ifdef FLOAT16_T_DEBUG
 constexpr inline unsigned long const float16_debug_mode = 1;
 #else
 constexpr inline unsigned long const float16_debug_mode = 0;

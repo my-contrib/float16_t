@@ -1,0 +1,1 @@
+option( 'enable-debug-mode', type: 'boolean', value: false, description: 'Enables extra debugging')
