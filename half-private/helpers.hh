@@ -3,6 +3,23 @@
 #include <cinttypes>
 #include <bit>
 
+#if __cplusplus >= 202002L
+#if __has_include(<version>)
+#include <version>
+#if __cpp_lib_bitops >= 201907L
+#include <bit>
+#define FLOAT16_T_HAS_STD_BITOPS 1
+#endif
+#if __cpp_lib_bit_cast >= 201806L
+#include <bit>
+#define FLOAT16_T_HAS_STD_BIT_CAST 1
+#endif
+#if __cpp_lib_to_underlying >= 202102L
+#define FLOAT16_T_HAS_STD_TO_UNDEFLYING 1
+#endif
+#endif
+#endif
+
 namespace half::half_private {
 
 [[maybe_unused, nodiscard]] constexpr inline std::uint32_t
