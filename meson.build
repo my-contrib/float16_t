@@ -30,10 +30,13 @@ _interface_cpp_args = get_option('enable-debug-mode')? ['-DFLOAT16_T_DEBUG'] : [
 float16_t_dep = declare_dependency(include_directories: include_directories('.'),
                                    compile_args: _interface_cpp_args)
 
-
 _tst_exe = executable('host_tst', ['tests'/'test.cc'],
   build_by_default: false,
   dependencies: [float16_t_dep, _catch2_amal_dep]
 )
 
+
 test('test sanity', _tst_exe)
+
+_fp_literals_exe = executable('fp_literals', ['fp16_storage_t.cc'],
+                              dependencies: float16_t_dep)
