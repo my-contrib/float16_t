@@ -1,4 +1,4 @@
-project ('nntrainer-softfloat16', ['cpp'],
+project ('nntrainer-floatstorage', ['cpp'],
          default_options: ['cpp_std=c++20'],
          meson_version: '>=1.1')
 
@@ -27,7 +27,7 @@ _catch2_amal_dep = declare_dependency(
 )
 
 _interface_cpp_args = get_option('enable-debug-mode')? ['-DFLOAT16_T_DEBUG'] : []
-float16_t_dep = declare_dependency(include_directories: include_directories('.'),
+float16_t_dep = declare_dependency(include_directories: include_directories('include'),
                                    compile_args: _interface_cpp_args)
 
 _tst_exe = executable('host_tst', ['tests'/'test.cc'],

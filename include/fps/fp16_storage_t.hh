@@ -5,7 +5,7 @@
 
 #include "half-private/fp_convert.hh"
 
-namespace fp_storage {
+namespace fps {
 
 template <typename E_, typename = std::enable_if_t<std::is_enum_v<E_>>> 
   //requires std::is_enum_v<E_>
@@ -38,9 +38,9 @@ constexpr inline auto convert_f2h(fp32_storage_t v) -> fp16_storage_t
   return from_underlying<fp16_storage_t>(half::float_to_half(uv));
 }
 
-} // namespace fp_storage
+} // namespace fps
 
-namespace fp_storage::literals {
+namespace fps::literals {
 
 inline auto operator "" _fs16(long double l) noexcept -> fp16_storage_t
 {
@@ -54,4 +54,4 @@ inline auto operator "" _fs32(long double l) noexcept -> fp32_storage_t
    return from_underlying<fp32_storage_t>(v);
 }
 
-} // namespace fp_storage
+} // namespace fps::literals
